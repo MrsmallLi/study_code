@@ -11,13 +11,6 @@ int n;
 int arr[15];
 int flag[10] = {0};
 
-int un_use_number() {
-    for (int i = 1; i <= n; i++) {
-        if (flag[i]) continue;
-        return i;
-    }
-    return 0;
-}
 
 void output() {
     for (int i = 0; i < n; i++) {
