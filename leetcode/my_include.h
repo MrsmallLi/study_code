@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <cmath>
 #include <ctime>
+#include <numeric>
+#include <algorithm>
 
 #define _MY_INCLUDE_H
 #endif
