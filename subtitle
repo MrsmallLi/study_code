@@ -1,0 +1,65 @@
+#!/bin/bash
+# This script is used to do some predoing before running the main script
+# 只有一个参数，参数是一个目录，这个目录里存放着需要处理的文件，请判断这个目录是否存在，如果不存在，则退出
+# 如果存在，则判断这个目录是否为空，如果为空，则退出
+# 使用utf-8编码
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+export LC_ALL=en_US.UTF-8
+#使用http请求，获取key_words内容，并存储在key_words文件中，接口为suyelu.pro/get_subtitle_key_words
+curl  -s -o ~/.config/subtitle/key_words http://aiotedu.cc:8000/api/get_subtile_key_words
+
+# 在key_words文件中，检索有没有关键字judge，如果没有，则退出
+cat ~/.config/subtitle/key_words | grep -q judge
+
+if [ $? -ne 0 ]; then
+    echo "api error"
+    exit 1
+fi
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 dir"
+    exit 1
+fi
+
+if [ ! -d $1 ]; then
+    echo "$1 is not a dir"
+    exit 2
+fi
+
+if [ -z "`ls -A $1`" ]; then
+    echo "$1 is empty"
+    exit 3
+fi
+# key_words这个文件中，存放着一行一行的文本，以_分割，第一列是需要替换的字符，第二列是替换后的字符，接下来对这个目录下的所有文件进行替换
+# 例如：key_words文件中有一行：hello world    hello kitty
+IFS=$'\n'
+
+for file in "$1"/*; do
+    #如果文件不是以srt结尾的文件，则跳过
+    if [ "${file##*.}" != "srt" ]; then
+        continue
+    fi
+    # 删除行首的吧这个字
+    sed -i  "s~^吧~~g" ""${file}""
+    # 删除行首的好这个字
+    sed -i  "s~^好~~g" ""${file}""
+    # 删除行末的好这个字
+    sed -i  "s~好$~~g" ""${file}""
+    # 删除文件中所有的啊这个字
+    sed -i  "s~啊~~g" ""${file}""
+    # 删除文件中所有的呢这个字
+    sed -i  "s~呢~~g" ""${file}""
+    sed -i  "s~哎~~g" ""${file}""
+    sed -i  "s~呃~~g" ""${file}""
+    # for each line in key_words file
+    for line in `cat ~/.config/subtitle/key_words`; do
+        # get the first column
+        old=`echo $line | awk -F_ '{print $1}'`
+        # get the second column
+        new=`echo $line | awk -F_ '{print $2}'`
+        # replace the old with new
+        sed -i  "s~$old~$new~g" ""${file}""
+    done
+    #以绿色输出这个文件名
+    echo -e "\033[32m$file\033[0m"
+done
