@@ -1,8 +1,8 @@
 /*************************************************************************
-	> File Name: test.cpp
+	> File Name: 15.cpp
 	> Author: 
 	> Mail: 
-	> Created Time: Wed 14 Aug 2024 04:54:24 PM CST
+	> Created Time: Sun 20 Oct 2024 12:34:44 AM CST
  ************************************************************************/
 
 #include <iostream>
@@ -11,8 +11,10 @@ using namespace std;
 
 
 int main() {
-    int a;
-    scanf("%d", &a);
-    printf("%d\n", a);
+    double c;
+    cin >> c ;
+    printf("%.12lf\n", c);
+
+
     return 0;
 }
