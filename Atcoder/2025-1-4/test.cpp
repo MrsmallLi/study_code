@@ -5,81 +5,66 @@
 	> Created Time: Sun 05 Jan 2025 10:40:56 PM CST
  ************************************************************************/
 
-#include <iostream>
+
+ #include <iostream>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
+const int BRIDGE_LENGTH = 20; // 桥的长度
+const int MAX_RICE = 10;      // 最大携带大米数量
 
-void NEXT(int &x) {
-    vector<int> arr;
-    while (x) {
-        arr.push_back(x % 10);
-        x /= 10;
-    }
-    int n = arr.size();
-    for (int i = n - 2, flag = 0; i >= 0; i--) {
-        if (flag) {
-            arr[i] = arr[n - 1] - 1;
-            continue;
+int solve_min_cost(int total_rice) {
+    // 定义 DP 数组：dp[i][j] 表示位置 i，携带 j 粒大米时的最小消耗
+    vector<vector<int>> dp(BRIDGE_LENGTH + 1, vector<int>(MAX_RICE + 1, INT_MAX));
+
+    // 初始化起点状态
+    for (int i = 0; i <= 10; i++) dp[0][i] = i;
+
+    // 动态规划
+    for (int i = 0; i < BRIDGE_LENGTH; ++i) {
+        for (int j = 0; j <= MAX_RICE; ++j) {
+            if (dp[i][j] == INT_MAX) continue; // 如果当前状态不可达，跳过
+
+            // 向前移动
+            if (j > 0) {
+                dp[i + 1][j - 1] = min(dp[i + 1][j - 1], dp[i][j] + 1);
+            }
+
+            // 返回移动
+            if (i > 0) {
+                dp[i - 1][j] = min(dp[i - 1][j], dp[i][j]);
+            }
+
+            // 存储大米
+            dp[i][0] = min(dp[i][0], dp[i][j]);
+
+            // 取用大米
+            for (int k = 1; k <= MAX_RICE; ++k) {
+                if (total_rice - dp[i][0] >= k) { // 必须保证有足够的大米存储
+                    dp[i][k] = min(dp[i][k], dp[i][0] + k);
+                }
+            }
         }
-        if (arr[i] < arr[arr.size() - 1]) continue;
-        arr[i] = arr[n - 1] - 1;
-        flag = 1;
     }
-    arr[0] += 1;
-    for (int i = 0; i < arr.size() - 1; i++) {
-        if (arr[i] < arr[arr.size() - 1]) continue;
-        arr[i] = 0;
-        arr[i + 1] += 1;
+
+    // 找到终点位置的最小消耗
+    int min_cost = INT_MAX;
+    for (int j = 0; j <= MAX_RICE; ++j) {
+        min_cost = min(min_cost, dp[BRIDGE_LENGTH][j]);
     }
-    if (arr[arr.size() - 1] == 10) {
-        arr[arr.size() - 1] = 0;
-        arr.push_back(1);
-    }
-    for (int i = arr.size() - 1; i >= 0; i--) {
-        x = x * 10 + arr[i];
-    }
-    return ;
+
+    return min_cost;
 }
-
-
-
-int POW(int x, int y) {
-    int num = 1;
-    while (y--) num *= x;
-    return num;
-}
-
-int NUM(int x) {
-    int cnt = 0;
-    vector<int> arr;
-    while (x) {
-        arr.push_back(x % 10);
-        x /= 10;
-    }
-    int n = arr.size();
-    for (int i = 2; i < n; i++) {
-        for (int j = 1; j <= 9; j++) {
-            cnt += POW(j, i - 1);
-        }
-        cout << "i = " << i << ", " << cnt << endl;
-    }
-    for (int i = 1; i < arr[n - 1]; i++) {
-        cnt += POW(i, n - 1);
-        cout << "i = " << i << ", " << cnt << endl;
-    }
-    for (int i = n - 2; i >= 0; i--) {
-        cnt += arr[i] * POW(arr[n - 1], i);
-        cout << "i = " << i << ", " << cnt << endl;
-    }
-    return cnt;
-}
-
 
 int main() {
-    int l; 
-    cin >> l;
-    cout << NUM(l) << endl;
+    int total_rice;
+    cout << "Enter the total number of rice grains: ";
+    cin >> total_rice;
+
+    int min_cost = solve_min_cost(total_rice);
+    cout << "Minimum rice consumption to reach the end: " << min_cost << endl;
+
     return 0;
 }

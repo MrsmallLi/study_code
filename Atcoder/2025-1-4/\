@@ -1,0 +1,36 @@
+/*************************************************************************
+	> File Name: test.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Sun 05 Jan 2025 10:40:56 PM CST
+ ************************************************************************/
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+
+int dp[25][20] = {0};
+
+int main() {
+    for (int i = 1; i <= 10; i++) {
+        for (int j = 0; j <= 10 - i; j++) {
+            dp[i][j] = j + i;
+        }
+    }
+    for (int i = 2; i <= 20; i++) {
+        for (int j = 0; j <= 10; j++) {
+            for (int k = 1; k < i; k++) {
+                for (int s = 0; s <= 10; s++) {
+                    if (i - k > dp[k][s]) continue;
+                    if (!dp[i][j]) {
+                        dp[i][j] = dp[k][s] + i - k + j - s;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}

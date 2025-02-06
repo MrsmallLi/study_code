@@ -1,0 +1,30 @@
+/*************************************************************************
+	> File Name: 2.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Sat 01 Feb 2025 08:30:43 PM CST
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    string s[55], t[55];
+    int a, b;
+    for (int i = 1; i <= n; i++) cin >> s[i];
+    for (int i = 1; i <= m; i++) cin >> t[i];
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (!check(i, j, s, t)) continue;
+            a = i, b = j;
+        }
+    }
+    cout << a << " " << b << endl;
+
+    return 0;
+}
