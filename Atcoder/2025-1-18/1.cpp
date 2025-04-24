@@ -14,8 +14,5 @@ int main() {
     char c;
     cin >> a >> c >> b;
     cout << a * b << endl;;
-
-
-
     return 0;
 }

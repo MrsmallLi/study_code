@@ -200,7 +200,22 @@ ostream &operator<<(ostream &out, const Bigint &a) {
     }
     return out;
 }
+int main() {
+    int n;
+    cin >> n;
+    Bigint ans(0);
+    for (int i = 1; i <= n; i++) {
+        Bigint num(1);
+        for (int j = 1; j <= i; j++) {
+            num *= j; 
+        }
+        ans += num;
+    }
+    cout << ans << endl;
+    return 0;
+}
 
+/**
 namespace test1 {
 
 int main() {
@@ -209,11 +224,11 @@ int main() {
         Bigint a(n), b(m);
         test(a);
         test(b);
-        test(a / b);
+        test(a + b);
         cout << "=================" << endl;
         test(a);
         test(b);
-        test(a /= b);
+        test(a += b);
         cout << "=================" << endl;
         test(a);
         test(b);
@@ -222,10 +237,6 @@ int main() {
     return 0;
 }
 }
-
-int main() {
-    test1::main();
-    return 0;
-}
+**/
 
 
